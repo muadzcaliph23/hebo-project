@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "Post" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "alias" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "apiKey" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

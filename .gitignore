@@ -1,0 +1,25 @@
+# Node / Bun
+node_modules/
+.bun/
+bun.lockb
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / cache
+dist/
+.build/
+.vite/
+.cache/
+coverage/
+*.tsbuildinfo
+
+# Env / editor
+.env
+.env.local
+.env.*.local
+.DS_Store
+.vscode/
+.idea/
+*.log
