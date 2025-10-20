@@ -88,6 +88,7 @@ const modelSchema = z
 
 const AddOrEditModel = ({ modelInfo, setEditingModelId }: AddOrEditProps) => {
   const isAdding = !modelInfo;
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   const [form, fields] = useForm({
     id: "model-form",
@@ -151,7 +152,7 @@ const AddOrEditModel = ({ modelInfo, setEditingModelId }: AddOrEditProps) => {
     if (isAdding || !modelInfo) return;
     setLoadingRemove(true);
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/models`, {
+    const res = await fetch(`${baseUrl}/api/models`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: modelInfo.id }),
@@ -200,7 +201,7 @@ const AddOrEditModel = ({ modelInfo, setEditingModelId }: AddOrEditProps) => {
 
     try {
       const method = isAdding ? "POST" : "PUT";
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/models`, {
+      const res = await fetch(`${baseUrl}/api/models`, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

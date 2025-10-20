@@ -14,6 +14,7 @@ const ModelPage = () => {
   const [models, setModels] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   useEffect(() => {
     let active = true;
@@ -21,7 +22,7 @@ const ModelPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/models`);
+        const res = await fetch(`${baseUrl}/api/models`);
         if (!res.ok) throw new Error(`Failed: ${res.status}`);
         const data = await res.json();
         if (active) setModels(data);
@@ -59,40 +60,42 @@ const ModelPage = () => {
       </header>
 
       <section className="space-y-4">
-        {models.length > 0 && (
-          <Card className="overflow-hidden">
-            {loading && (
-              <CardHeader className="flex flex-col justify-between py-2.5 space-y-7">
-                {Array.from({ length: 2 }).map((_, idx) => (
-                  <Skeleton key={idx} className="h-6 w-full" />
-                ))}
-              </CardHeader>
-            )}
-            {error && <div className="p-4 text-sm text-red-600">{error}</div>}
-            {models.map((m, idx) => (
-              <div key={idx} className="w-full">
-                <ModelDetails
-                  editingModelId={editingModelId}
-                  handleEdit={() => handleEdit(m.id)}
+        <Card className="overflow-hidden">
+          {loading && (
+            <CardHeader className="flex flex-col justify-between py-2.5 space-y-7">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+            </CardHeader>
+          )}
+          {error && <div className="p-4 text-sm text-red-600">{error}</div>}
+          {models.length === 0 && !loading && !error && (
+            <div className="p-4 text-sm text-gray-600">
+              No models configured. Click "Add Model" to get started.
+            </div>
+          )}
+          {models.map((m, idx) => (
+            <div key={idx} className="w-full">
+              <ModelDetails
+                editingModelId={editingModelId}
+                handleEdit={() => handleEdit(m.id)}
+                modelInfo={m}
+              />
+              <div
+                aria-expanded={editingModelId === m.id}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  editingModelId === m.id
+                    ? "max-h-[2000px] opacity-100 translate-y-0"
+                    : "max-h-0 opacity-0 -translate-y-2 pointer-events-none"
+                }`}
+              >
+                <AddOrEditModel
                   modelInfo={m}
+                  setEditingModelId={setEditingModelId}
                 />
-                <div
-                  aria-expanded={editingModelId === m.id}
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    editingModelId === m.id
-                      ? "max-h-[2000px] opacity-100 translate-y-0"
-                      : "max-h-0 opacity-0 -translate-y-2 pointer-events-none"
-                  }`}
-                >
-                  <AddOrEditModel
-                    modelInfo={m}
-                    setEditingModelId={setEditingModelId}
-                  />
-                </div>
               </div>
-            ))}
-          </Card>
-        )}
+            </div>
+          ))}
+        </Card>
         <AddingDialog />
       </section>
     </div>

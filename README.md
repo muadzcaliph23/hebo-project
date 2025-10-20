@@ -21,7 +21,7 @@ bun -v
 git --version
 ```
 
-## Quickstart (local, Windows)
+## Frontend Quickstart (local, Windows)
 
 From project root:
 
@@ -31,13 +31,7 @@ From project root:
 bun install
 ```
 
-2. Run backend API (serves on http://localhost:3000)
-
-```powershell
-bun run server/server.ts
-```
-
-3. In a new terminal start the frontend
+2. In a new terminal start the frontend
 
 ```powershell
 cd frontend
@@ -60,6 +54,44 @@ VITE_FRONTEND_URL="http://localhost:5173"
 VITE_API_URL="http://localhost:3000"
 ```
 
+## Setup Database / Prisma
+
+This project uses Prisma as the ORM. Quick steps to add Prisma and generate the client (example uses Bun):
+
+1. Install Prisma and the client
+
+```powershell
+bun add -d prisma
+bun add @prisma/client
+```
+
+2. Initialize prisma
+
+```powershell
+bunx prisma init
+```
+
+3. Create migration and generate client (SDLite)
+
+```powershell
+bunx prisma migrate dev --name init
+bunx prisma generate
+```
+
+4. Open prisma studio to see the database
+
+```powershell
+bunx prisma studio
+```
+
+## Start the backend
+
+1. Run backend API (serves on http://localhost:3000)
+
+```powershell
+bun run server/server.ts
+```
+
 ## API
 
 - POST /api/models — add model
@@ -73,9 +105,3 @@ VITE_API_URL="http://localhost:3000"
 - server/ — Bun backend (server.ts, api handlers)
 - frontend/ — React frontend (src/, components/, pages/)
 - README.md — this file
-
-## Development tips
-
-- When working with forms, ensure inputs have unique ids/names per form instance to avoid cross-form radio collisions.
-- Use devtools to inspect layout; set popovers/hovercards to portal if they shift the sidebar.
-- For notifications, Sonner position adjusted in `src/components/ui/sonner.tsx`.
