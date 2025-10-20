@@ -21,7 +21,7 @@ const ModelPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch("http://localhost:3000/api/models");
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/models`);
         if (!res.ok) throw new Error(`Failed: ${res.status}`);
         const data = await res.json();
         if (active) setModels(data);
