@@ -185,16 +185,40 @@ const AddOrEditModel = ({ modelInfo, setEditingModelId }: AddOrEditProps) => {
 
     const formEl = e.currentTarget;
     const formData = new FormData(formEl);
+
+    formData.set("strategy", strategy || "");
+    formData.set("routing", routing || "");
+    formData.set("endpoint", endpoint || "");
+    formData.set("apiKey", apiKey || "");
+
+    // run zod validation
+    const result = parseWithZod(formData, { schema: modelSchema });
+
+    if (result.status !== "success") {
+      const errors = [
+        result.error?.alias,
+        result.error?.model,
+        result.error?.routing,
+        result.error?.strategy,
+        result.error?.endpoint,
+        result.error?.apiKey,
+      ];
+      toast.error("Form validation failed", {
+        description: errors.join("\n"),
+      });
+
+      return;
+    }
     const entries = Object.fromEntries(formData.entries());
 
     const payload = {
       id: modelInfo?.id,
       alias: entries.alias as string,
       model: entries.model as string,
-      strategy,
-      routing: routing || undefined,
-      endpoint: endpoint || undefined,
-      apiKey: apiKey || undefined,
+      strategy: entries.strategy as string,
+      routing: entries.routing || undefined,
+      endpoint: entries.endpoint || undefined,
+      apiKey: entries.apiKey || undefined,
     };
 
     setLoading(true);
